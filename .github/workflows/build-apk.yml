@@ -44,17 +44,10 @@ jobs:
         run: |
           # Add Android platform if not yet present
           npx cap add android || true
-          
-          # Inject Screen Time Android permissions into AndroidManifest.xml
-          MANIFEST_PATH="android/app/src/main/AndroidManifest.xml"
-          if [ -f "$MANIFEST_PATH" ]; then
-            echo "Configuring Android Permissions for Screen Time tracking..."
-            # Check and insert PACKAGE_USAGE_STATS permission
-            if ! grep -q "PACKAGE_USAGE_STATS" "$MANIFEST_PATH"; then
-              sed -i '/<manifest/a \    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />' "$MANIFEST_PATH"
-            fi
-          fi
-          
+
+          # Safely configure AndroidManifest with valid XML namespaces & permissions
+          node scripts/configure-android.mjs
+
           # Sync assets to native project
           npx cap sync android
 
