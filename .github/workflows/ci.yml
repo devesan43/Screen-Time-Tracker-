@@ -6,10 +6,13 @@ on:
   pull_request:
     branches: [main, master]
 
+env:
+  ACTIONS_RUNNER_FORCE_ACTIONS_NODE_VERSION: node24
+
 jobs:
   validate-and-test:
     name: Lint & Build Validation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout Code
