@@ -1,0 +1,6 @@
+{
+  "name": "ChronosScreen - Android Screen Time Monitor",
+  "description": "Smart Android screen time monitor for social media, browsing, and phone usage with daily/weekly/monthly analytics, custom alerts, APK export, and data export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
