@@ -257,8 +257,16 @@ jobs:
         {/* Tab 3: GitHub Actions CI */}
         {activeTab === 'github' && (
           <div className="space-y-4">
-            <p className="text-xs text-slate-300">
-              Add this GitHub Actions workflow file at <code>.github/workflows/build-apk.yml</code>. Whenever you push code to GitHub, GitHub automatically compiles a fresh <code>.apk</code> ready to install on your phone!
+            <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2.5">
+              <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+              <div>
+                <strong className="text-white block">Workflow File Already Created!</strong>
+                <span><code>.github/workflows/build-apk.yml</code> and <code>capacitor.config.json</code> are configured in this project root.</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              Whenever you push your code to GitHub, GitHub Actions will automatically install dependencies, set up the Android SDK, and compile a fresh <strong>ChronosScreen-debug.apk</strong> file.
             </p>
 
             <div className="flex items-center justify-between">
@@ -272,13 +280,23 @@ jobs:
               </button>
             </div>
 
-            <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono overflow-x-auto leading-relaxed max-h-64">
+            <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono overflow-x-auto leading-relaxed max-h-52">
               {githubActionsWorkflow}
             </pre>
 
-            <div className="p-3 rounded-xl bg-indigo-950/40 border border-indigo-800/40 text-xs text-indigo-200">
-              <strong className="text-white block mb-0.5">Quick Git Push:</strong>
-              <code>git remote add origin https://github.com/&lt;your-username&gt;/screentime-android.git && git push -u origin main</code>
+            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-2">
+              <strong className="text-white block">How to Get Your APK on GitHub:</strong>
+              <ol className="list-decimal list-inside space-y-1 text-slate-300">
+                <li>Create a repository on GitHub (e.g. <code className="text-sky-400">chronos-screen-time</code>).</li>
+                <li>Push this codebase:
+                  <div className="mt-1 p-2 bg-slate-900 rounded-lg text-[11px] font-mono text-emerald-400">
+                    git add . && git commit -m "feat: Add Android Screen Time monitor" && git push
+                  </div>
+                </li>
+                <li>Click the <strong>Actions</strong> tab on your GitHub repository.</li>
+                <li>Select the <strong>Build Android APK</strong> workflow run.</li>
+                <li>Download the <strong>ChronosScreen-Android-APK</strong> artifact file directly to your phone!</li>
+              </ol>
             </div>
           </div>
         )}

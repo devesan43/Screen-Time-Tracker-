@@ -1,0 +1,12 @@
+{
+  "appId": "com.chronos.screentime",
+  "appName": "ChronosScreen",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true
+  }
+}
