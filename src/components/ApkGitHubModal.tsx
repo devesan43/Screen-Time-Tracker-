@@ -83,7 +83,7 @@ jobs:
           node-version: 20
       - name: Install dependencies & Build
         run: |
-          npm ci
+          npm install
           npm run build
       - name: Setup Java JDK
         uses: actions/setup-java@v4
