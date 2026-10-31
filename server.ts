@@ -1,4 +1,5 @@
 import express from 'express';
+import http from 'http';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -230,10 +231,14 @@ Provide personalized, empathetic, actionable advice and specific micro-adjustmen
 
 async function startServer() {
   const isProd = process.env.NODE_ENV === 'production';
+  const httpServer = http.createServer(app);
 
   if (!isProd) {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: process.env.DISABLE_HMR === 'true' ? false : { server: httpServer },
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -244,7 +249,7 @@ async function startServer() {
     });
   }
 
-  app.listen(port, '0.0.0.0', () => {
+  httpServer.listen(port, '0.0.0.0', () => {
     console.log(`Server listening on port ${port} (mode: ${isProd ? 'production' : 'development'})`);
   });
 }

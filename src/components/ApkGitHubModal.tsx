@@ -88,8 +88,8 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: 'temurin'
+          java-version: '21'
       - name: Build Android APK with Capacitor
         run: |
           npx cap add android || true
