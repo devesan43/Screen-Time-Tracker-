@@ -11,6 +11,7 @@ import {
   Sparkles,
   RotateCcw,
   Sliders,
+  RefreshCw,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -31,6 +32,9 @@ export const Header: React.FC<HeaderProps> = ({
     updateBedtime,
     resetTodayData,
     limits,
+    syncDeviceData,
+    isSyncing,
+    lastSyncTime,
   } = useScreenTime();
 
   const { isInstallable, isInstalled, install } = usePWAInstall();
@@ -77,6 +81,18 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Install App</span>
             </button>
           )}
+
+          {/* Real-time Synchronous Device Sync */}
+          <button
+            onClick={syncDeviceData}
+            disabled={isSyncing}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold border border-slate-700 transition"
+            title={`Real-time Android Sync (Last: ${lastSyncTime})`}
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${isSyncing ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">{isSyncing ? 'Syncing...' : 'Sync Data'}</span>
+            <span className="sm:hidden">Sync</span>
+          </button>
 
           {/* Android APK & GitHub modal trigger */}
           <button

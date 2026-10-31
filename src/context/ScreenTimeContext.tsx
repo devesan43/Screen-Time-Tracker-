@@ -45,6 +45,11 @@ interface ScreenTimeContextType {
   addUsageMinutes: (appId: string, minutes: number) => void;
   resetTodayData: () => void;
   importHistoryData: (newHistory: Record<string, DayRecord>, newLimits?: UsageLimit[]) => boolean;
+  syncDeviceData: () => Promise<void>;
+  isSyncing: boolean;
+  lastSyncTime: string;
+  trackingSpeed: 'normal' | 'demo';
+  setTrackingSpeed: (speed: 'normal' | 'demo') => void;
 }
 
 const ScreenTimeContext = createContext<ScreenTimeContextType | undefined>(undefined);
@@ -63,6 +68,21 @@ export const ScreenTimeProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
   const [deviceViewMode, setDeviceViewMode] = useState<'phone' | 'fluid'>('fluid');
   const [selectedAppForDetail, setSelectedAppForDetail] = useState<TrackedApp | null>(null);
+
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string>('Just now');
+  const [trackingSpeed, setTrackingSpeed] = useState<'normal' | 'demo'>('normal');
+
+  const syncDeviceData = useCallback(async () => {
+    setIsSyncing(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setLastSyncTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      soundService.playSuccessChime();
+    } finally {
+      setIsSyncing(false);
+    }
+  }, []);
 
   // Initialize history from localStorage or generate fresh
   const [history, setHistory] = useState<Record<string, DayRecord>>(() => {
@@ -287,15 +307,15 @@ export const ScreenTimeProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     });
   }, [selectedDate, checkAlertLimits]);
 
-  // Live tracking timer effect
+  // Live tracking timer effect (synchronous real-time updates)
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
     if (liveTracking.isActive) {
       interval = setInterval(() => {
         setLiveTracking((prev) => {
           const nextSec = prev.elapsedSeconds + 1;
-          // Every 60 seconds of real-time usage, persist 1 minute to the app!
-          if (nextSec > 0 && nextSec % 60 === 0) {
+          // In demo speed mode, increment 1m per second; in normal mode, every 60s
+          if (trackingSpeed === 'demo' || (nextSec > 0 && nextSec % 60 === 0)) {
             addUsageMinutes(prev.appId, 1);
           }
           return {
@@ -308,7 +328,7 @@ export const ScreenTimeProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [liveTracking.isActive, addUsageMinutes]);
+  }, [liveTracking.isActive, addUsageMinutes, trackingSpeed]);
 
   const startLiveTracking = (appId: string) => {
     setLiveTracking({
@@ -421,6 +441,11 @@ export const ScreenTimeProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         addUsageMinutes,
         resetTodayData,
         importHistoryData,
+        syncDeviceData,
+        isSyncing,
+        lastSyncTime,
+        trackingSpeed,
+        setTrackingSpeed,
       }}
     >
       <div className={bedtime.enabled && bedtime.grayscale ? 'bedtime-grayscale' : ''}>

@@ -19,6 +19,8 @@ export const LiveTrackerBar: React.FC = () => {
     startLiveTracking,
     stopLiveTracking,
     addUsageMinutes,
+    trackingSpeed,
+    setTrackingSpeed,
   } = useScreenTime();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -126,25 +128,40 @@ export const LiveTrackerBar: React.FC = () => {
               ))}
             </div>
 
-            {/* Fast booster buttons */}
-            <div className="flex items-center justify-between gap-2 pt-1">
-              <span className="text-slate-400 text-[11px]">Quick Add:</span>
+            {/* Speed Toggle & Fast booster buttons */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-800/60">
               <div className="flex items-center gap-1.5">
+                <span className="text-slate-400 text-[11px]">Sync Rate:</span>
+                <button
+                  onClick={() => setTrackingSpeed(trackingSpeed === 'normal' ? 'demo' : 'normal')}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold border transition ${
+                    trackingSpeed === 'demo'
+                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                      : 'bg-slate-800 text-slate-300 border-slate-700'
+                  }`}
+                  title="Toggle real-time rate vs 1s = 1m rapid demo rate"
+                >
+                  {trackingSpeed === 'demo' ? '⚡ Demo Rate (1s = +1m)' : '⏱ Normal (1s = 1s)'}
+                </button>
+              </div>
+
+              <div className="flex items-center justify-end gap-1.5">
+                <span className="text-slate-400 text-[11px]">Boost:</span>
                 <button
                   onClick={() => addUsageMinutes(activeApp.id, 5)}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium"
+                  className="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-medium"
                 >
                   +5m
                 </button>
                 <button
                   onClick={() => addUsageMinutes(activeApp.id, 15)}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium"
+                  className="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-medium"
                 >
                   +15m
                 </button>
                 <button
                   onClick={() => addUsageMinutes(activeApp.id, 30)}
-                  className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium"
+                  className="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-medium"
                 >
                   +30m
                 </button>
